@@ -1,26 +1,33 @@
-import {PixooAPI, Color} from "pixoo-api";
-import axios from 'axios'
+// import { PixooAPI, Color } from "pixoo-api";
+import axios from "axios";
+import Pixoo from 'pixoo';
+
+let pixoo;
 
 async function main() {
-  const pixoo = new PixooAPI("10.0.0.186", 64);
-  await pixoo.initialize();
+  pixoo = new Pixoo.Pixoo("10.0.0.186", 64);
+  pixoo.init();
 
-  // fetch number from https://api.we-two.de/api/user/count?token=made-with-love with axios
+  await update();
+  setInterval(async () => {
+    await update();
+  }, 1000 * 60 * 5);
+}
+
+async function update() {
+  await pixoo.fill();
+  
   const { data } = await axios.get(
     "https://api.we-two.de/api/user/count?token=made-with-love"
   );
-  console.log(data);
 
-  pixoo.drawText("We-Two:", [5, 5], Color.White);
-  pixoo.drawText(data.toString(), [5, 12, 0], Color.White);
-  pixoo.drawText("User", [25, 12, 0], Color.Magenta);
+  await pixoo.drawText("WeTwo", [5, 5], [255, 255, 255]);
+  await pixoo.drawText(data.toString() + " User", [5, 12, 0], [255, 50, 80]);
 
   const count = Math.floor(Math.random() * 100);
-  pixoo.drawText(count.toString(), [5, 20], Color.White);
+  console.log('count', count);
+  await pixoo.drawText(count.toString(), [5, 20, 0], [255, 255, 255]);
+  // await pixoo.drawChar(count.toString(), [5, 20, 0], [255, 255, 255]);
 
-  //pixoo.drawText("Paystory:", [5, 20, ], Color.White);
-  //pixoo.drawText(count.toString(), [5, 28, 0], Color.White);
-  //pixoo.drawPixel(10, 10, [255, 0, 0], Color.White)
-  await pixoo.push();
 }
 main();
