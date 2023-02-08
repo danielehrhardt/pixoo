@@ -11,23 +11,28 @@ async function main() {
   await update();
   setInterval(async () => {
     await update();
-  }, 1000 * 60 * 5);
+  }, 1000 * 60 * 1);
 }
 
 async function update() {
   await pixoo.fill();
-  
   const { data } = await axios.get(
     "https://api.we-two.de/api/user/count?token=made-with-love"
   );
 
-  await pixoo.drawText("WeTwo", [5, 5], [255, 255, 255]);
-  await pixoo.drawText(data.toString() + " User", [5, 12, 0], [255, 50, 80]);
+  const today = new Date();
+  const time = today.getHours() + ":" + today.getMinutes();
+  console.log('time', time);
+  await pixoo.drawText(time, [5, 5, 0], [0, 255, 255]);
+  
 
-  const count = Math.floor(Math.random() * 100);
-  console.log('count', count);
-  await pixoo.drawText(count.toString(), [5, 20, 0], [255, 255, 255]);
-  // await pixoo.drawChar(count.toString(), [5, 20, 0], [255, 255, 255]);
+  await pixoo.drawText("WeTwo", [5, 15], [255, 255, 255]);
+  await pixoo.drawText(data.toString() + " User", [5, 22, 0], [255, 50, 80]);
+
+  const random = Math.floor(Math.random() * 100);
+  await pixoo.drawText(random.toString(), [53, 55, 0], [255, 255, 255]);
+
+
 
 }
 main();
